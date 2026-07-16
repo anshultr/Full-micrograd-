@@ -30,8 +30,6 @@ class Value:
         self._prev_ordered = _children  # order-preserving copy, used only by the graph visualizer in PART 5
         self._op = _op
         self.label = label
-        # BUG FIX: original signature accepted `label` but __init__ never did
-        # `self.label = label`, so the argument was silently thrown away.
  
     def __repr__(self):
         return f"Value(data={self.data}, grad={self.grad})"
@@ -43,12 +41,7 @@ class Value:
             # += will acumulate the gradients on top of each other not overwriting them
             self.grad += 1.0 * out.grad 
             other.grad += 1.0 * out.grad 
-            # BUG FIX: original used `=` here. A node's grad is the SUM of its
-            # contribution along every path to the output (multivariable chain
-            # rule). `=` overwrites, so any node feeding two different
-            # downstream ops loses every contribution except the last one
-            # processed. `+=` accumulates them, which is required even though
-            # none of the graphs below happen to reuse a node -- see PART 1b.
+
         out._backward = _backward
         return out
  
@@ -84,12 +77,7 @@ class Value:
     def tanh(self):
         n = self.data
         t = (math.exp(2 * n) - 1) / (math.exp(2 * n) + 1)
-        # BUG FIX: original was `math.exp(2*n) - 1 / (math.exp(2*n) + 1)`.
-        # Python does the division before the subtraction, so that line
-        # computed e^2n - [1/(e^2n+1)] instead of (e^2n-1)/(e^2n+1). The
-        # result wasn't a tanh at all -- it could exceed 1, as you'll see
-        # in PART 4 (it printed 4.785 for tanh(0.8), which is impossible;
-        # tanh is bounded in (-1, 1)).
+        
         out = Value(t, (self,), 'tanh')
         def _backward():
             self.grad += (1 - t**2) * out.grad   # BUG FIX: += not =
@@ -102,9 +90,7 @@ class Value:
         out = Value(s, (self,), 'sigmoid')
         def _backward():
             self.grad += s * (1 - s) * out.grad
-            # BUG FIX: original defined no _backward function at all for
-            # sigmoid, so it silently kept the default `lambda: None` from
-            # __init__ -- gradient would never flow through a sigmoid node.
+     
         out._backward = _backward
         return out
     def exp(self): 
@@ -205,9 +191,6 @@ x1w1x2w2.grad = df
 bias.grad = df
 x1w1.grad = df
 x2w2.grad = df
-# '+' has local derivative 1, so grad passes through unchanged -- this part
-# of the original logic was structurally right, it just needed `df` instead
-# of a hardcoded 0.5 that only applies to Karpathy's specific b value.
  
 x1.grad = x1w1.grad * w1.data
 w1.grad = x1w1.grad * x1.data
