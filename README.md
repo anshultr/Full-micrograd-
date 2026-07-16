@@ -16,6 +16,8 @@ It starts with plain multiplication and addition between numbers to show what a 
 - A single neuron (`o = tanh(x1*w1 + x2*w2 + b)`), backpropagated by hand and cross-checked against PyTorch's own autograd on the same numbers — a sanity check that the from-scratch engine matches a trusted reference.
 - `Neuron` / `Layer` / `MLP` — the same `Value` engine composed into an actual multi-layer perceptron.
 - A training loop: zero gradients → forward pass → `loss.backward()` → step each parameter by `-lr * grad`, for 20 epochs on a 4-example toy dataset.
+"A short thought — I have seen and perceived models running using various machine learning libraries but never really knew what goes on inside that thin layer of these virtual libraries. Now I realize that everything is just math. These big machines become more understandable to us through mathematics; in the end, it's just the chain rule, where parameters wrap themselves one upon the other to reduce the loss by choosing the shortest path to reach the downhill. The neurons are the same as the neurons in the brain, except the patterns they learn become accessible to them at any point in time. We are driven by emotions, while most models do things without being driven by emotions or feelings. This mechanical way of processing things is what makes a machine a machine."
+
 
 ## Running it
 
