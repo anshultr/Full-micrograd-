@@ -6,7 +6,7 @@ A from-scratch implementation of reverse-mode automatic differentiation (backpro
 
 The goal is to learn a tiny neural network that minimizes the error between its predictions and a set of ground-truth values, by building the machinery that makes that possible from first principles rather than importing it.
 
-It starts with plain multiplication and addition between numbers to show what a "forward pass" and a numerical derivative actually are. From there, a `Value` class wraps every number in a node that remembers how it was computed, so that calling `.backward()` on the final result walks the computation graph in reverse and deposits a gradient on every node that contributed to it — that's backpropagation. Once the engine is trustworthy, it's assembled into `Neuron`, `Layer`, and `MLP` classes and trained for 20 epochs with plain stochastic gradient descent.
+It starts with plain multiplication and addition between numbers to show what a "forward pass" and a numerical derivative actually are. From there, a `Value` class ('__repr__') wraps every number in a node that remembers how it was computed, so that calling `.backward()` on the final result walks the computation graph in reverse and deposits a gradient on every node that contributed to it, that's backpropagation. Once the engine is trustworthy, it's assembled into `Neuron`, `Layer`, and `MLP` classes and trained for 20 epochs with plain stochastic gradient descent.
 
 ## What's implemented
 
