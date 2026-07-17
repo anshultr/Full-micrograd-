@@ -22,7 +22,7 @@ It starts with plain multiplication and addition between numbers to show what a 
 ## Running it
 
 ```bash
-python micrograd.py
+python Micrograd.py
 ```
 
 Requires `numpy`, `matplotlib`, and `torch` (torch is only used for the verification section — the network itself has no dependencies beyond the standard library).
